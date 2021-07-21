@@ -104,12 +104,25 @@ async def s(m, session):
         prompt = s_channels[m.channel] + f'{m.author.name}: {content}\nAI: '
 
         #
+        # Cutomizable temperature
+        #
+
+        if m.content.split()[1][:2] == 't=':
+            try:
+                temperature = int(m.content.split()[1][2:])
+            except:
+                await m.reply('Error in the temperature value')
+                return
+        else:
+            temperature = 0.7
+
+        #
         # Generate
         #
     
         # Use an AI to complete the prompt
         # It only returns the new generated text, it doesn't include the prompt
-        gen = await synth(session, prompt)
+        gen = await synth(session, prompt, temperature)
 
         #
         # Remove irrelevant lines

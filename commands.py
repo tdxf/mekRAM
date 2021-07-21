@@ -49,7 +49,7 @@ s_replying = False
 
 def s_get_default_prompt(author):
     """ helper """
-    return author.name + ': hi!\nAI: hi :D\n'
+    return author.name + ': hi!\nmekRAM: hi :D\n'
 
 def s_filter_text(txt):
     """
@@ -61,13 +61,13 @@ def s_filter_text(txt):
     We only want the AI's replies, not any other text
 
     This function tries to remove these irrelevant lines by filtering 'txt'
-    to only include lines that start with "AI: "
+    to only include lines that start with "mekRAM: "
 
     (Except the first one)
     """
     txt = txt.splitlines(True)
 
-    return "".join([txt[0]] + [line for line in txt if line.startswith('AI: ')])
+    return "".join([txt[0]] + [line for line in txt if line.startswith('mekRAM: ')])
 
 @httpcommand
 async def s(m, session):
@@ -106,7 +106,7 @@ async def s(m, session):
         #
 
         # Structure the prompt like a chatroom 
-        prompt = s_channels[m.channel] + f'{m.author.name}: {content}\nAI: '
+        prompt = s_channels[m.channel] + f'{m.author.name}: {content}\nmekRAM: '
 
         #
         # Cutomizable temperature
@@ -134,7 +134,7 @@ async def s(m, session):
         # Remove irrelevant lines
         #
 
-        # Split the text into lines and check if each line starts with "AI:"
+        # Split the text into lines and check if each line starts with "mekRAM:"
         gen = s_filter_text(gen)
         print(gen)
 
@@ -142,7 +142,7 @@ async def s(m, session):
         # Reply!
         #
 
-        await m.reply(gen.replace('AI: ', ''))
+        await m.reply(gen.replace('mekRAM: ', ''))
 
         #
         # Update the channel message history

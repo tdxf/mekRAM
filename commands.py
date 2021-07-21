@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pytz import timezone
+import pytz
 from discord import Embed
 
 from synth import synth
@@ -188,4 +188,6 @@ async def time(m, a):
     if not person in t_people:
         await m.reply("Person isn't in the list")
     else:
-        await m.reply(f"It is {timezone(t_people[person][0]).localize(datetime.now()).strftime('%Y-%m-%d %H:%M')} in {t_people[person][1]}")
+        timezone = pytz.timezone(t_people[person][0])
+        formatted_time = pytz.utc.astimezone(timezone).strftime('%Y-%m-%d %H:%M')
+        await m.reply(f"It is {formatted_time} in {t_people[person][1]}")

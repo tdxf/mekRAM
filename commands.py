@@ -109,7 +109,7 @@ async def s(m, session):
 
         if m.content.split()[1][:2] == 't=':
             try:
-                temperature = int(m.content.split()[1][2:])
+                temperature = float(m.content.split()[1][2:])
             except:
                 await m.reply('Error in the temperature value')
                 s_replying = False

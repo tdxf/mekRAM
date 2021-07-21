@@ -112,6 +112,7 @@ async def s(m, session):
                 temperature = int(m.content.split()[1][2:])
             except:
                 await m.reply('Error in the temperature value')
+                s_replying = False
                 return
         else:
             temperature = 0.7

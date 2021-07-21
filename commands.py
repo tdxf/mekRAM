@@ -142,6 +142,12 @@ async def s(m, session):
         gen = s_filter_text(gen)
 
         #
+        # FIXME: temporary measure, limit the bot's reply to one line
+        #
+
+        gen = gen.splitlines()[0]
+
+        #
         # Reply!
         #
 

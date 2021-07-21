@@ -218,4 +218,4 @@ async def time(m, a):
     else:
         timezone = pytz.timezone(t_people[person][0])
         formatted_time = datetime.utcnow().replace(tzinfo=pytz.utc).astimezone(timezone).strftime('%-I:%M%p %d %b')
-        await m.reply(f"In {t_people[person[1]]} it's {formatted_time}")
+        await m.reply(f"In {t_people[person][1]} it's {formatted_time}")

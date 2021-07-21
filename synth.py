@@ -33,16 +33,19 @@ async def synth(session, prompt):
     # Getting the completion
     #
 
-    while True:
-        # Preparing arguments
-        data = get_data(prompt)
-        headers = { 'Content-Type': 'application/json', 'User-Agent': 'HowlerBot'}
+    # Preparing arguments
+    data = get_data(prompt)
+    headers = { 'Content-Type': 'application/json', 'User-Agent': 'HowlerBot'}
 
+    while True:
         # Do the request
         async with session.post(url, data=data, headers=headers) as resp:
             if resp.status == 200:
-                txt = await resp.text()
-                if txt.strip():
+                try:
+                    txt = await resp.text()
+                except:
+                    continue
+                if not txt.strip(' \n\t') == "":
                     break
 
     #

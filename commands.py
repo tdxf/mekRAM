@@ -16,7 +16,7 @@ def command(func):
         arguments = split[1:] if len(split) > 1 else []
 
         return func(message, arguments)
-    commands[func.__name__] = func
+    commands[func.__name__] = inner
     return inner
 
 

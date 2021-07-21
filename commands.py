@@ -47,13 +47,13 @@ async def help(m, a):
 s_channels = {}
 s_replying = False
 
-def s_get_default_prompt(author):
+def s_get_default_prompt(dname):
     """ helper """
     # Long initial prompt
     # Tries to establish a pattern where mekRAM only replies with a single line
     # With a shorter prompt, mekRAM would spam tons of lines
     # Also tries to establish a cute personality for mekRAM ashuahuasuh
-    return f"{author.display_name}: hi!\nmekRAM: hi {author.display_name} :3 good to see you!\n{author.display_name}: thank you! :D, hi mekram!\nmekRAM: helo!\n{author.display_name}: I'm good!\nmekRAM: i'm so glad! >w<\n"
+    return f"{dname}: hi!\nmekRAM: hi {dname} :3 good to see you!\n{dname}: thank you mekram!\nmekRAM: i'm so glad you're here! >w<\n"
 
 def s_filter_text(txt):
     """
@@ -90,7 +90,7 @@ async def s(m, session):
 
         # If a message history for the channel doesn't exist, create one
         if not m.channel in s_channels:
-            s_channels[m.channel] = s_get_default_prompt(m.author)
+            s_channels[m.channel] = s_get_default_prompt(m.author.display_name)
 
             await m.reply(f'Started talking in #{m.channel.name}!')
 
@@ -124,7 +124,7 @@ async def s(m, session):
                 s_replying = False
                 return
         else:
-            temperature = 0.7
+            temperature = 0.9
 
         #
         # Generate
@@ -156,7 +156,8 @@ async def s(m, session):
         #
         # Update the channel message history
         #
-        s_channels[m.channel] = prompt + gen
+        n = '\n' if gen[-1] != '\n' else ''
+        s_channels[m.channel] = prompt + gen + n
 
         s_replying = False
 
@@ -175,10 +176,9 @@ async def sm(m, a):
         history = s_channels[m.channel].split('\n', 6)[-1]
 
         # Because of the 1024 character limit, we need to split the embed
-        while history.strip(' \n\t'):
+        while history.strip(' \n\t') != "":
             # We do it by lines so it's prettier
-            value = history[:1024].rsplit('\n', 1)[0]
-            history = history[len(value):]
+            value, history = history[:1024].rsplit('\n', 1)
 
             # Embed name is invisible
             embed.add_field(name='\u200b', value=value)

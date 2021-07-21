@@ -28,6 +28,7 @@ async def synth(session, prompt, temperature):
     """
     Uses TextSynth to complete the prompt
     """
+    print(prompt)
 
     #
     # Getting the completion
@@ -35,7 +36,7 @@ async def synth(session, prompt, temperature):
 
     # Preparing arguments
     data = get_data(prompt, temperature)
-    headers = { 'Content-Type': 'application/json', 'User-Agent': 'HowlerBot'}
+    headers = { 'Content-Type': 'application/json', 'User-Agent': 'mekRAM'}
 
     while True:
         # Do the request
@@ -45,6 +46,7 @@ async def synth(session, prompt, temperature):
                     txt = await resp.text()
                 except:
                     continue
+
                 if not txt.strip(' \n\t') == "":
                     break
 

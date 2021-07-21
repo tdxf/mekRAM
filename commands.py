@@ -52,8 +52,9 @@ def s_get_default_prompt(dname):
     # Long initial prompt
     # Tries to establish a pattern where mekRAM only replies with a single line
     # With a shorter prompt, mekRAM would spam tons of lines
-    # Also tries to establish a cute personality for mekRAM ashuahuasuh
-    return f"{dname}: hi!\nmekRAM: hi {dname} :3 good to see you!\n{dname}: thank you mekram!\nmekRAM: i'm so glad you're here! >w<\n"
+    prompt = f'The following is an IRC conversation between {dname} and the mekRAM artificial intelligence.\n'
+    prompt += f"{dname}: hello there!\nmekRAM: hi! i'm good!\n"
+    return prompt
 
 def s_filter_text(txt):
     """
@@ -100,11 +101,6 @@ async def s(m, session):
         # Removes the !s
         content = m.content[3:]
 
-        # Temperature
-        t = False
-        if content.startswith('t='):
-            t, content = content.split(' ', 1)
-
         #
         # Prepare the prompt
         #
@@ -113,45 +109,40 @@ async def s(m, session):
         prompt = s_channels[m.channel] + f'{m.author.display_name}: {content}\nmekRAM: '
 
         #
-        # Cutomizable temperature
-        #
-
-        if t:
-            try:
-                temperature = float(t[2:])
-            except:
-                await m.reply('Error in the temperature value')
-                s_replying = False
-                return
-        else:
-            temperature = 0.9
-
-        #
         # Generate
         #
+
+        while True:
     
-        # Use an AI to complete the prompt
-        # It only returns the new generated text, it doesn't include the prompt
-        gen = await synth(session, prompt, temperature)
+            # Use an AI to complete the prompt
+            # It only returns the new generated text, it doesn't include the prompt
+            print(prompt)
+            gen = await synth(session, prompt)
+            print(gen)
 
-        #
-        # Remove irrelevant lines
-        #
+            #
+            # Remove irrelevant lines
+            #
 
-        # Split the text into lines and check if each line starts with "mekRAM:"
-        gen = s_filter_text(gen)
+            # Split the text into lines and check if each line starts with "AI:"
+            gen = s_filter_text(gen)
 
-        #
-        # FIXME: temporary measure, limit the bot's reply to one line
-        #
+            #
+            # FIXME: temporary measure, limit the bot's reply to one line
+            #
 
-        gen = gen.splitlines()[0]
+            gen = gen.splitlines(True)[0]
+
+            reply = gen.replace('mekRAM: ', '')
+
+            if reply.strip(' \n\t'):
+                break
 
         #
         # Reply!
         #
 
-        await m.reply(gen.replace('mekRAM: ', ''))
+        await m.reply(reply)
 
         #
         # Update the channel message history
@@ -176,12 +167,15 @@ async def sm(m, a):
         history = s_channels[m.channel].split('\n', 6)[-1]
 
         # Because of the 1024 character limit, we need to split the embed
-        while history.strip(' \n\t') != "":
+        while True:
             # We do it by lines so it's prettier
-            value, history = history[:1024].rsplit('\n', 1)
+            value = history[:1024].rsplit('\n', 1)
+            history = history[len(value):]
 
-            # Embed name is invisible
-            embed.add_field(name='\u200b', value=value)
+            if not value[0].strip():
+                break
+
+            embed.add_field(name='\u200b', value=value[0])
 
         await m.reply(embed=embed)
 

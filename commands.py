@@ -49,7 +49,11 @@ s_replying = False
 
 def s_get_default_prompt(author):
     """ helper """
-    return f"{author.display_name}: hi!\nmekRAM: hi {author.display_name} good to see you! :D\n"
+    # Long initial prompt
+    # Tries to establish a pattern where mekRAM only replies with a single line
+    # With a shorter prompt, mekRAM would spam tons of lines
+    # Also tries to establish a cute personality for mekRAM ashuahuasuh
+    return f"{author.display_name}: hi!\nmekRAM: hi {author.display_name} :3 good to see you!\n{author.display_name}: thank you! :D, hi mekram!\nmekRAM: helo!\n{author.display_name}: I'm good!\nmekRAM: i'm so glad! >w<\n"
 
 def s_filter_text(txt):
     """
@@ -136,7 +140,6 @@ async def s(m, session):
 
         # Split the text into lines and check if each line starts with "mekRAM:"
         gen = s_filter_text(gen)
-        print(gen)
 
         #
         # Reply!
@@ -161,7 +164,9 @@ async def sm(m, a):
         await m.reply("This channel doesn't have a message history")
     else:
         embed = Embed()
-        history = s_channels[m.channel]
+        # Removes the first 6 lines
+        # They're always going to be the default prompt
+        history = s_channels[m.channel].split('\n', 6)[-1]
 
         # Because of the 1024 character limit, we need to split the embed
         while history.strip(' \n\t'):
@@ -206,5 +211,5 @@ async def time(m, a):
         await m.reply("Person isn't in the list")
     else:
         timezone = pytz.timezone(t_people[person][0])
-        formatted_time = datetime.utcnow().replace(tzinfo=pytz.utc).astimezone(timezone).strftime('%-I:%M%p %m-%d')
-        await m.reply(f"It is {formatted_time} in {t_people[person][1]}")
+        formatted_time = datetime.utcnow().replace(tzinfo=pytz.utc).astimezone(timezone).strftime('%-I:%M%p %d %b')
+        await m.reply(f"In {t_people[person[1]]} it's {formatted_time}")

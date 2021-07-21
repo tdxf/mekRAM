@@ -1,3 +1,6 @@
+from time import gmtime
+
+from pytz import timezone
 from discord import Embed
 
 from synth import synth
@@ -27,6 +30,7 @@ def httpcommand(func):
 
 help_embed = Embed()
 help_embed.add_field(name='AI Chat', value='!s <message> - Chat\n!sm - Message History\n!sr - Restart')
+help_embed.add_field(name='Other', value='!time <person> - Show local time for <person>')
 
 @command
 async def help(m):
@@ -132,7 +136,7 @@ async def sm(m):
     Replies with the message history for the channel
     """
     if not m.channel in s_channels:
-        await m.reply("This channel doesn't have a message history.")
+        await m.reply("This channel doesn't have a message history")
     else:
         embed = Embed()
         history = s_channels[m.channel]
@@ -158,3 +162,27 @@ async def sr(m):
     else:
         s_channels.pop(m.channel)
         await m.reply('Message history for this channel has been reset')
+
+
+#########
+# Other #
+#########
+
+t_people = {
+    'aky': ['America/Sao_Paulo', 'the southeast of Brazil'],
+    'annas': ['Asia/Jakarta', 'Java, Indonesia'],
+    'jack': ['America/Los_Angeles', 'west coast USA'],
+    'kamii': ['Asia/Manila', 'the Philippines'],
+    'kosai': ['America/Santiago', 'Chile'],
+    'trigo': ['Asia/Istanbul', 'Turkey'],
+    'wai': ['Europe/Sofia', 'Bulgaria']
+}
+
+@command
+async def time(m):
+    person = m.content[3:].lower()
+
+    if not person in t_people:
+        await m.reply("Person isn't in the list")
+    else:
+        await m.reply(f"It is {timezone(t_people[person][0]).strftime('%Y-%m-%d %H:%M')} in {t_people[person][1]}")

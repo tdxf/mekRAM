@@ -49,7 +49,7 @@ s_replying = False
 
 def s_get_default_prompt(author):
     """ helper """
-    return author.name + ': hi!\nmekRAM: hi :D\n'
+    return f"{author.display_name}: hi!\nmekRAM: hi {author.display_name} good to see you! :D\n"
 
 def s_filter_text(txt):
     """
@@ -106,7 +106,7 @@ async def s(m, session):
         #
 
         # Structure the prompt like a chatroom 
-        prompt = s_channels[m.channel] + f'{m.author.name}: {content}\nmekRAM: '
+        prompt = s_channels[m.channel] + f'{m.author.display_name}: {content}\nmekRAM: '
 
         #
         # Cutomizable temperature
@@ -168,8 +168,6 @@ async def sm(m, a):
             # We do it by lines so it's prettier
             value = history[:1024].rsplit('\n', 1)[0]
             history = history[len(value):]
-
-            print(history)
 
             # Embed name is invisible
             embed.add_field(name='\u200b', value=value)

@@ -131,7 +131,7 @@ async def s(m, session):
             # FIXME: temporary measure, limit the bot's reply to one line
             #
 
-            gen = gen.splitlines(True)[0]
+            gen = "".join(gen.splitlines(True)[:3])
 
             reply = gen.replace('mekRAM: ', '')
 
@@ -152,6 +152,16 @@ async def s(m, session):
 
         s_replying = False
 
+
+@command
+async def ss(m, a):
+    """
+    Put words in the bot's mouth
+    """
+    if not m.channel in s_channels:
+        await m.reply("This channel doesn't have a message history")
+    else:
+        s_channels[m.channel] +=
 
 @command
 async def sm(m, a):

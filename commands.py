@@ -93,12 +93,17 @@ async def s(m, session):
         # Cool typing effect
         await m.channel.trigger_typing()
 
+        # Removes the !s
+        content = m.content[3:]
+
+        # Temperature
+        t = False
+        if content.startswith('t='):
+            t, content = content.split(' ', 1)
+
         #
         # Prepare the prompt
         #
-
-        # Gets the message content without the !s
-        content = m.content[3:]
 
         # Structure the prompt like a chatroom 
         prompt = s_channels[m.channel] + f'{m.author.name}: {content}\nAI: '
@@ -107,9 +112,9 @@ async def s(m, session):
         # Cutomizable temperature
         #
 
-        if m.content.split()[1][:2] == 't=':
+        if t:
             try:
-                temperature = float(m.content.split()[1][2:])
+                temperature = float(t[2:])
             except:
                 await m.reply('Error in the temperature value')
                 s_replying = False

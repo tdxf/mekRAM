@@ -189,5 +189,5 @@ async def time(m, a):
         await m.reply("Person isn't in the list")
     else:
         timezone = pytz.timezone(t_people[person][0])
-        formatted_time = datetime.utcnow().replace(tzinfo=pytz.utc).astimezone(timezone).strftime('%Y-%m-%d %H:%M')
+        formatted_time = datetime.utcnow().replace(tzinfo=pytz.utc).astimezone(timezone).strftime('%Y-%m-%d %-I:%M%p')
         await m.reply(f"It is {formatted_time} in {t_people[person][1]}")

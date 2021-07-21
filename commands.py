@@ -164,7 +164,7 @@ async def sm(m, a):
         history = s_channels[m.channel]
 
         # Because of the 1024 character limit, we need to split the embed
-        while history != '\n':
+        while history.strip(' \n\t'):
             # We do it by lines so it's prettier
             value = history[:1024].rsplit('\n', 1)[0]
             history = history[len(value):]

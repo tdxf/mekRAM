@@ -12,7 +12,10 @@ http_commands = {}
 
 def command(func):
     def inner(message):
-        return func(message)
+        split = message.content.split()
+        arguments = split[1:] if len(split) > 1 else []
+
+        return func(message, arguments)
     commands[func.__name__] = func
     return inner
 
@@ -33,7 +36,7 @@ help_embed.add_field(name='AI Chat', value='!s <message> - Chat\n!sm - Message H
 help_embed.add_field(name='Other', value='!time <person> - Show local time for <person>')
 
 @command
-async def help(m):
+async def help(m, a):
     await m.reply(embed=help_embed)
 
 
@@ -131,7 +134,7 @@ async def s(m, session):
 
 
 @command
-async def sm(m):
+async def sm(m, a):
     """
     Replies with the message history for the channel
     """
@@ -156,7 +159,7 @@ async def sm(m):
 
 
 @command
-async def sr(m):
+async def sr(m, a):
     if not m.channel in s_channels:
         await m.reply("This channel doesn't have a message history to be deleted")
     else:
@@ -179,8 +182,8 @@ t_people = {
 }
 
 @command
-async def time(m):
-    person = m.content[3:].lower()
+async def time(m, a):
+    person = a[0] if a else None
 
     if not person in t_people:
         await m.reply("Person isn't in the list")

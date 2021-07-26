@@ -146,7 +146,7 @@ def cmd(reply_type: ReplyType = ReplyType.ANYREPLY,
     Takes arguments.
     """
 
-    def decorator(func: Callable) -> Callable:
+    def decorator(func: Callable[[discord.Message, list, Any], tuple]) -> Callable[[discord.Message], tuple]:
         """Decorator"""
         # Create a Command object for the func
         com: Command = Command(func, reply_type, parameter_types)

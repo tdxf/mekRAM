@@ -1,1 +1,3 @@
-Test
+Inspired on [[https://github.com/annasajkh/Cum-Botter][Annas's Cum Bot]]
+
+* TODO Commands

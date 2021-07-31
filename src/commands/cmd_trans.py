@@ -12,7 +12,7 @@ translator = googletrans.Translator()
 
 
 @cmd()
-async def tra(_: discord.Message, argument: str, **_k):
+async def tra(_: discord.Message, argument: str, **_k) -> tuple:
     """
     Translates the string passed to the command.
     Arguments:
@@ -20,6 +20,7 @@ async def tra(_: discord.Message, argument: str, **_k):
         assume that the first word in the argument is the desired destination languaged.
         If there isn't a ":", use English as the default destination language.
     """
+
     if not argument:
         raise Exception('Not enough arguments for !tra')
 

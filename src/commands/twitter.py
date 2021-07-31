@@ -3,10 +3,12 @@ Uses twint to fetch tweets.
 """
 
 
+import os
 import random
+import asyncio
 import datetime
 
-import twitter_scraper
+import twint
 
 import epochs
 
@@ -25,16 +27,31 @@ async def search_random_image(query: str, min_date: str, min_likes: int = 40) ->
     :return: List of image URLs.
     """
     # Make sure that the tweet selected has at least one image in it
-    while True:
-        # Get a random date between the start of 2017 and today
-        until: str = datetime.date.fromtimestamp(epochs.get_random_epoch(min_date)).isoformat()
+    # Get a random date between the start of 2017 and today
+    until: str = datetime.date.fromtimestamp(epochs.get_random_epoch(min_date)).isoformat()
 
-        # Mount the query
-        query: str = f'{query} until:{until} min_faves:{min_likes} filter:links'
+    c = twint.Config()
 
-        # Get the tweets, checking if one of the tweets has an image
-        for tweet in twitter_scraper.get_tweets(query):
-            print(tweet)
+    c.Images = True
+    c.Limit = 10
 
-            if tweet['entries']['photos']:
-                return tweet
+    c.Search = query
+    c.Until = until
+    c.Min_likes = min_likes
+
+    tweets: list = []
+    c.Store_object = True
+    c.Store_object_tweets_list = tweets
+
+    url_list = asyncio.Future()
+
+    def set_url_list(*_) -> None:
+        """
+        Called after twint finishes filling the tweet list.
+        Sets the url_list's value to be the tweet list.
+        """
+        url_list.set_result(tweets)
+
+    twint.run.Search(c, set_url_list)
+
+    return random.choice(await url_list).photos

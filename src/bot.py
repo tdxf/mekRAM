@@ -6,6 +6,7 @@ Creates the discord Client object.
 from typing import Any, Callable
 import traceback
 
+import nest_asyncio
 import aiohttp
 import discord
 
@@ -23,6 +24,11 @@ class Uwu(discord.Client):
         self.http_session = aiohttp.ClientSession()
         print('mekRAM ready!')
         print(commands_list.commands)
+
+        # twint creates a new loop for scraping
+        # and asyncio doesn't like nested loops a lot
+        # So we need to use patch the loop with nest_asyncio for twint to work
+        nest_asyncio.apply()
 
     async def on_message(self, message) -> Any:
         if message.author != self.user and message.content and message.content.strip() != '!':

@@ -4,3 +4,5 @@ pytz==2021.1
 pillow==8.3.1
 pytesseract==0.3.8
 googletrans==4.0.0rc1
+nest-asyncio==1.5.1
+git+git://github.com/twintproject/twint

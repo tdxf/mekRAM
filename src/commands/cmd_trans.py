@@ -32,7 +32,7 @@ async def tra(_: discord.Message, argument: str, **_k) -> tuple:
         lang: str = first_arg[1:]
 
         # Override the argument variable,
-        # as it will be used later on as the text sent to translater
+        # as it will be used later on as the text sent to translate
         argument: str = ' '.join(split_arg[1:])
 
     # If it wasn't passed, assume english

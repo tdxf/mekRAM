@@ -8,7 +8,7 @@ from enum import Enum
 
 import discord
 
-from commands_list import commands
+from .commands_list import commands
 
 
 class ReplyType(Enum):

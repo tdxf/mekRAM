@@ -7,8 +7,8 @@ from typing import Callable, Optional
 
 import discord
 
-from cmds import cmd, ReplyType
-import emojicode
+from .cmds import cmd, ReplyType
+from . import emojicode
 
 
 # A dictionary mapping users to encryption keys
@@ -66,6 +66,8 @@ async def dec(message: discord.Message, _, **_k) -> tuple:
     except Exception:
         raise Exception('Error while decoding')
     else:
+        decoded: str = f'{message.author.display_name}: {decoded}'
+        await message.delete()
         return decoded,
 
 

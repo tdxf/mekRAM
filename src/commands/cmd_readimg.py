@@ -8,7 +8,7 @@ import io
 from PIL import Image
 import pytesseract
 
-from cmds import cmd, discord
+from .cmds import cmd, discord
 
 
 @cmd()
@@ -22,4 +22,8 @@ async def read(message: discord.Message, _, **_k) -> tuple:
 
     image: Image = Image.open(stream)
 
-    return pytesseract.image_to_string(image),
+    txt: str = pytesseract.image_to_string(image)
+
+    if txt == '': txt = 'No text found'
+
+    return txt,

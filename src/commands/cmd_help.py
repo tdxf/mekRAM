@@ -3,7 +3,7 @@ Command list in an embed.
 """
 
 
-from cmds import cmd, discord
+from .cmds import cmd, discord
 
 
 help_embed = discord.Embed(title='Commands List. ? means optional')

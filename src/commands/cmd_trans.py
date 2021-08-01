@@ -5,7 +5,7 @@ Commands that use Google Translate.
 
 import googletrans
 
-from cmds import cmd, discord
+from .cmds import cmd, discord
 
 
 translator = googletrans.Translator()
@@ -16,9 +16,9 @@ async def tra(_: discord.Message, argument: str, **_k) -> tuple:
     """
     Translates the string passed to the command.
     Arguments:
-        If the single string argument's first character is a ":",
+        If the single string argument's first character is a dash "-",
         assume that the first word in the argument is the desired destination languaged.
-        If there isn't a ":", use English as the default destination language.
+        If there isn't a dash in the beginning, use English as the default destination language.
     """
 
     if not argument:
@@ -28,7 +28,7 @@ async def tra(_: discord.Message, argument: str, **_k) -> tuple:
     split_arg: list[str] = argument.split()
     first_arg: str = split_arg[0]
 
-    if first_arg[0] == ':' and len(split_arg) > 1:
+    if first_arg[0] == '-' and len(split_arg) > 1:
         lang: str = first_arg[1:]
 
         # Override the argument variable,

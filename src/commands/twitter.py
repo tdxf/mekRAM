@@ -8,9 +8,13 @@ import random
 import asyncio
 import datetime
 
+import nest_asyncio
 import twint
 
-import epochs
+from . import epochs
+
+
+is_fetching: bool = False
 
 
 async def search_random_image(query: str, min_date: str, min_likes: int = 40) -> list[str]:
@@ -26,17 +30,23 @@ async def search_random_image(query: str, min_date: str, min_likes: int = 40) ->
     :param min_likes: Limit tweets to have at least this many likes.
     :return: List of image URLs.
     """
-    # Make sure that the tweet selected has at least one image in it
+    global is_fetching
+
+    if is_fetching:
+        raise Exception('Already fetching for another user')
+
+    is_fetching = True
+
     # Get a random date between the start of 2017 and today
-    until: str = datetime.date.fromtimestamp(epochs.get_random_epoch(min_date)).isoformat()
+    since: str = datetime.date.fromtimestamp(epochs.get_random_epoch(min_date)).isoformat()
 
     c = twint.Config()
 
     c.Images = True
-    c.Limit = 10
+    c.Limit = 20
 
     c.Search = query
-    c.Until = until
+    c.Since = since
     c.Min_likes = min_likes
 
     tweets: list = []
@@ -50,8 +60,13 @@ async def search_random_image(query: str, min_date: str, min_likes: int = 40) ->
         Called after twint finishes filling the tweet list.
         Sets the url_list's value to be the tweet list.
         """
+        global is_fetching
+        is_fetching = False
+
         url_list.set_result(tweets)
 
+    nest_asyncio.apply()
     twint.run.Search(c, set_url_list)
+    nest_asyncio.apply()
 
     return random.choice(await url_list).photos

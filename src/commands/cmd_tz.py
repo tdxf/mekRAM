@@ -7,7 +7,7 @@ from datetime import datetime
 
 import pytz
 
-from cmds import cmd
+from .cmds import cmd
 
 
 # The time table's head

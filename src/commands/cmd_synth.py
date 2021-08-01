@@ -5,8 +5,8 @@ Commands for simulating chatting with the GPT AI.
 
 from typing import Optional
 
-from cmds import cmd, discord
-from synth import synth
+from .cmds import cmd, discord
+from .synth import synth
 
 
 # Keys are Discord text channels

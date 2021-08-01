@@ -11,7 +11,8 @@ import aiohttp
 import discord
 
 
-from commands import commands_list, cmds, cmd_emojicode
+from commands import commands_list, cmds
+from commands import cmd_emojicode, cmd_readimg, cmd_synth, cmd_tz, cmd_twitter, cmd_trans, cmd_other
 
 
 class Uwu(discord.Client):
